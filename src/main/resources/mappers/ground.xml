@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ground">
+	<select id="count" resultType="int">
+		select count(*) from ground
+	</select>
+
+	<select id="list" resultType="com.example.ground.dto.GroundDTO">
+		SELECT name, address, filename,
+		filename2, filename3 FROM (
+		SELECT ROWNUM AS rn, A.* FROM (
+		SELECT name,
+		address, filename, filename2, filename3
+		FROM ground
+		) A
+		) WHERE rn
+		BETWEEN #{start} AND #{end}
+	</select>
+	<select id="detail_list"
+		resultType="com.example.ground.dto.GroundDTO">
+		SELECT g.name, g.address, g.filename, g.filename2,
+		g.filename3, g.price,
+		g.idx,i.groundsize,i.shower,i.parking,i.borrow,i.drinking
+		FROM ground g
+		INNER JOIN groundinfo i ON g.idx = i.idx
+		WHERE g.name =#{name}
+	</select>
+	<select id="pricelist" parameterType="String" resultType="int">
+		SELECT
+		price FROM ground WHERE name = #{name}
+	</select>
+	<select id="search_count" resultType="int">
+		select count(*) from ground
+		where address like '%'||#{keyword}||'%'
+	</select>
+	<select id="search_list"
+		resultType="com.example.ground.dto.GroundDTO">
+		select name,address,filename,filename2,filename3 from (select rownum as rn,
+		A.* from (
+		select name, address, filename, idx, price,filename2,filename3
+		from ground
+		where address like '%'||#{keyword}||'%'
+		) A) where rn between #{start} and #{end}
+	</select>
+</mapper>

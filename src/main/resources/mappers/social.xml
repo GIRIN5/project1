@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="social">
+	<insert id="insertmatch">
+		insert into social
+		(section,idx,groundname,age,gender,way,count,matchdate)
+		values
+		(social_seq.nextval,#{idx},#{groundname},#{age},#{gender},#{way},#{count},#{matchdate})
+	</insert>
+	<select id="matchList"
+		resultType="com.example.ground.dto.SocialDTO">
+		select * from (
+		select rownum as rn, A.* from (
+		SELECT
+		*
+		FROM
+		social
+		) A
+		) where rn
+		between #{start} and
+		#{end}
+	</select>
+	<select id="count" resultType="int">
+		select count(*) from social
+	</select>
+	<select id="detail"
+		resultType="com.example.ground.dto.SocialDTO">
+		select
+		s.idx,s.groundname,s.age,s.gender,s.way,s.count,s.matchdate
+		,g.address,g.price,g.filename,g.idx as sex from social s inner join
+		ground g on s.groundname=g.name where s.idx=#{idx}
+	</select>
+	<delete id="delete">
+		delete from social where idx=#{idx}
+	</delete>
+	<select id="selectone"
+		resultType="com.example.ground.dto.SocialDTO">
+		select * from social where idx=#{idx}
+	</select>
+	<insert id="insert">
+		INSERT INTO socialapplication 
+		VALUES ((SELECT NVL(MAX(id), 1) + 1 FROM
+		socialapplication),#{idx},#{userid})
+	</insert>
+	<select id="check" resultType="int">
+	select count(*) from socialapplication where idx=#{idx} and userid=#{userid}
+	</select>
+	<select id="list" resultType="com.example.ground.dto.SocialApplicationDTO">
+	select * from socialapplication where idx=#{idx}
+	</select>
+</mapper>

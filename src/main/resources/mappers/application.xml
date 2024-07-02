@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="application">
+	<insert id="insert">
+		insert into application (num,code,userid,introduce)
+		values(application_seq.nextval,#{code},#{userid},#{introduce})
+	</insert>
+	<select id="check"
+		resultType="com.example.ground.dto.ApplicationDTO">
+		select * from application where userid=#{userid} and
+		code=#{code}
+	</select>
+	<delete id="delete">
+		delete from application where num=#{num}
+	</delete>
+	<select id="confirm"
+		resultType="com.example.ground.dto.ApplicationDTO">
+		SELECT
+		a.code,
+		a.userid,
+		a.introduce,
+		m.name
+		FROM
+		application a
+		INNER JOIN
+		member m
+		ON
+		a.userid = m.userid
+		WHERE
+		a.code = #{code}
+	</select>
+	<delete id="deleteapp">
+	delete from application where code=#{code} and userid=#{userid}
+	</delete>
+</mapper>
